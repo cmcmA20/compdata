@@ -41,7 +41,7 @@ class ArbitraryF f where
 makeArbitraryF :: Name -> Q [Dec]
 makeArbitraryF dt = do
   Just (DataInfo _cxt name args constrs _deriving) <- abstractNewtypeQ $ reify dt
-  let argNames = map (VarT . tyVarBndrName) (tail args)
+  let argNames = map (VarT . tyVarBndrName) (drop 1 args)
       complType = foldl AppT (ConT name) argNames
       preCond = map (mkClassP ''Arbitrary . (: [])) argNames
       classType = AppT (ConT ''ArbitraryF) complType
@@ -115,4 +115,4 @@ generateShrinkFDecl constrs
                  let ret = NoBindS $ AppE (VarE 'return) (foldl1 AppE ( ConE constr: map VarE resVarNs ))
                      stmtSeq = binds ++ [ret]
                      pat = ConP constr [] $ map VarP varNs
-                 return $ Clause [pat] (NormalB $ AppE (VarE 'tail) (DoE Nothing stmtSeq)) []
+                 return $ Clause [pat] (NormalB $ AppE (VarE 'tail') (DoE Nothing stmtSeq)) []

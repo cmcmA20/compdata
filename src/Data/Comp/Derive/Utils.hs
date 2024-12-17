@@ -21,6 +21,9 @@ import Language.Haskell.TH
 import Language.Haskell.TH.Syntax
 import Language.Haskell.TH.ExpandSyns
 
+tail' :: [a] -> [a]
+tail' = drop 1
+
 data DataInfo = forall flag . DataInfo Cxt Name [TyVarBndr flag] [Con] [DerivClause] 
 
 

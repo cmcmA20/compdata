@@ -25,6 +25,7 @@ import Data.Comp.Equality
 import Data.Comp.Term
 import Data.Comp.Variables
 import Data.Foldable
+import Data.List (uncons)
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Traversable
@@ -64,7 +65,7 @@ matchCxt c1 c2 = do
   res <- matchCxt' c1 c2
   let insts = Map.elems res
   mapM_ checkEq insts
-  return $ Map.map head res
+  traverse (fmap fst . uncons) res
     where checkEq [] = Nothing
           checkEq (c : cs)
               | all (== c) cs = Just ()
